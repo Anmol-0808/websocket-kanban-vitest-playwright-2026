@@ -1,0 +1,132 @@
+:root {
+  --bg-dark: #111318;
+  --card-dark: #1c1f26;
+  --border-light: #e6e6e6;
+  --accent-yellow: #ffd600;
+  --accent-green: #22c55e;
+  --accent-purple: #a855f7;
+  --accent-red: #ef4444;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-dark);
+  color: white;
+  font-family: 'Inter', sans-serif;
+}
+.kanban-container {
+  padding: 40px;
+}
+
+.add-btn {
+  background: var(--accent-yellow);
+  border: 4px solid var(--border-light);
+  padding: 14px 30px;
+  font-weight: 900;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 0px var(--border-light);
+  margin-bottom: 30px;
+}
+
+.add-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0px var(--border-light);
+}
+
+.board {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.column {
+  flex: 1;
+  background: var(--card-dark);
+  border: 4px solid var(--border-light);
+  padding: 25px;
+  min-height: 400px;
+  box-shadow: 4px 4px 0px var(--border-light);
+}
+
+
+
+.card {
+  background: #1a1d24;
+  border: 3px solid var(--border-light);
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 4px 4px 0px var(--border-light);
+  cursor: grab;
+  transition: transform 0.1s ease;
+}
+
+.card:hover {
+  transform: translate(-3px, -3px);
+}
+
+.column.active {
+  background: #dbeafe;
+  border: 2px dashed #2563eb;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal {
+  background: var(--card-dark);
+  border: 4px solid var(--border-light);
+  padding: 30px;
+  width: 350px;
+  box-shadow: 12px 12px 0px var(--border-light);
+
+}
+
+.modal h3 {
+  margin-bottom: 20px;
+  text-transform: uppercase;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 3px solid var(--border-light);
+  background: #1c1f26;
+  color: white;
+}
+
+.modal-actions button {
+  border: 3px solid var(--border-light);
+  background: var(--accent-yellow);
+  padding: 8px 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+h2 {
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.column h3 {
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+

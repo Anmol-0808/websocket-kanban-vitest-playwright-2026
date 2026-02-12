@@ -53,6 +53,9 @@ io.on("connection", (socket) => {
 
     io.emit("sync:tasks", tasks);
   });
+    socket.on("sync:tasks", () => {
+      socket.emit("sync:tasks", tasks);
+    });
 
   socket.on("task:delete", (taskId) => {
     tasks = tasks.filter((task) => task.id !== taskId);

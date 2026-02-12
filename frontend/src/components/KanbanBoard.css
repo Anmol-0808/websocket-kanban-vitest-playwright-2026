@@ -68,8 +68,9 @@ body {
 }
 
 .column.active {
-  background: #dbeafe;
-  border: 2px dashed #2563eb;
+  background: #242833; 
+  border: 4px dashed var(--border-light);
+  box-shadow: 8px 8px 0px var(--border-light);
 }
 .modal-overlay {
   position: fixed;
@@ -96,7 +97,8 @@ body {
 }
 
 .modal input,
-.modal select {
+.modal select,
+.modal textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -129,4 +131,86 @@ h2 {
   margin-bottom: 20px;
   font-size: 18px;
 }
+.column-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
 
+.task-count {
+  border: 3px solid var(--border-light);
+  padding: 4px 10px;
+  font-weight: bold;
+  background: #1a1d24;
+}
+
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dot.low {
+  background: var(--accent-green);
+}
+
+.dot.medium {
+  background: var(--accent-yellow);
+}
+
+.dot.high {
+  background: var(--accent-red);
+}
+
+
+.delete-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.delete-icon:hover {
+  color: #ff3b3b;
+}
+.modal textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.badge-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+
+
+.badge-text {
+  font-size: 12px;
+}
+.badge-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.priority-badge,
+.category-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  border: 2px solid var(--border-light);
+  padding: 4px 10px;
+
+  font-size: 12px;
+  text-transform: uppercase;
+
+  height: 28px;
+}

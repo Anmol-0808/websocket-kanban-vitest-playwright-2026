@@ -12,14 +12,26 @@ function KanbanBoard() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
 
 
-  const handleCreateTask = (taskData) => {
-  socket.emit("task:create", taskData);
+  const handleSubmitTask = (taskData) => {
+  if (selectedTask) {
+    socket.emit("task:update", {
+      ...selectedTask,
+      ...taskData,
+    });
+  } else {
+    socket.emit("task:create", taskData);
+  }
+
+  setSelectedTask(null);
 };
 
 
+
   useEffect(() => {
+    socket.emit("sync:tasks")
     socket.on("sync:tasks", (serverTasks) => {
       setTasks(serverTasks);
       setLoading(false)
@@ -30,13 +42,6 @@ function KanbanBoard() {
     };
   }, []);
 
-  const createDummyTask = () => {
-    socket.emit("task:create", {
-      title: "New Task",
-      priority: "medium",
-      category: "feature",
-    });
-  };
 
   const handleDropTask = (taskId, newStatus) => {
     socket.emit("task:move", {
@@ -67,6 +72,10 @@ function KanbanBoard() {
               status="todo"
               tasks={tasks}
               onDropTask={handleDropTask}
+              onEditTask={(task) => {
+              setSelectedTask(task);
+              setIsModalOpen(true);
+              }}
             />
 
             <Column
@@ -74,6 +83,10 @@ function KanbanBoard() {
               status="in-progress"
               tasks={tasks}
               onDropTask={handleDropTask}
+              onEditTask={(task) => {
+              setSelectedTask(task);
+              setIsModalOpen(true);
+              }}
             />
 
             <Column
@@ -81,15 +94,24 @@ function KanbanBoard() {
               status="done"
               tasks={tasks}
               onDropTask={handleDropTask}
+              onEditTask={(task) => {
+              setSelectedTask(task);
+              setIsModalOpen(true);
+              }}
             />
           </div>
         </>
       )}
-            <TaskModal
+        <TaskModal
         isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleCreateTask}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedTask(null);
+        }}
+        onSubmit={handleSubmitTask}
+        existingTask={selectedTask}
       />
+
     </div>
   </DndProvider>
 );

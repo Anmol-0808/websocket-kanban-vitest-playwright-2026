@@ -2,7 +2,7 @@ import React from "react";
 import { useDrop } from "react-dnd";
 import TaskCard, { ItemType } from "./TaskCard";
 
-function Column({ title, status, tasks, onDropTask }) {
+function Column({ title, status, tasks, onDropTask, onEditTask }) {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: ItemType,
     drop: (item) => {
@@ -16,19 +16,27 @@ function Column({ title, status, tasks, onDropTask }) {
   }));
 
   return (
-    <div
-      ref={drop}
-      className={`column ${isOver ? "active" : ""}`}
-      data-testid={`column-${status}`}
-    >
-      <h3>{title}</h3>
-
-      {tasks
-        .filter((task) => task.status === status)
-        .map((task) => (
-          <TaskCard key={task.id} task={task} />
-        ))}
-    </div>
+          <div
+        ref={drop}
+        className={`column ${isOver ? "active" : ""}`}
+        data-testid={`column-${status}`}
+        >
+        <div className="column-header">
+          <h3>{title}</h3>
+          <span className="task-count">
+            {tasks.filter((task) => task.status === status).length}
+          </span>
+        </div>
+        {tasks
+          .filter((task) => task.status === status)
+          .map((task) => (
+            <TaskCard
+                key={task.id}
+                task={task}
+                  onEdit={onEditTask}
+            />
+          ))}
+      </div>
   );
 }
 

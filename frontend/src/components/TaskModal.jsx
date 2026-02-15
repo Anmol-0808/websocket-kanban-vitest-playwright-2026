@@ -8,6 +8,7 @@ function TaskModal({ isOpen, onClose, onSubmit, existingTask }) {
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("feature");
   const [attachments, setAttachments] = useState([]);
+  const [fileError, setFileError] = useState("");
 
   useEffect(() => {
   if (!isOpen) return;
@@ -49,24 +50,38 @@ function TaskModal({ isOpen, onClose, onSubmit, existingTask }) {
 const handleFileChange = async (e) => {
   const files = Array.from(e.target.files);
 
-  const processedFiles = await Promise.all(
-    files.map((file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = () => {
-          resolve({
-            name: file.name,
-            type: file.type,
-            data: reader.result,
-          });
-        };
-        reader.readAsDataURL(file);
-      });
-    })
-  );
+  const allowedTypes = ["application/pdf"];
 
+  const processedFiles = [];
+
+  for (let file of files) {
+    if (
+      !file.type.startsWith("image/") &&
+      !allowedTypes.includes(file.type)
+    ) {
+      setFileError("Unsupported file type");
+      return;
+    }
+
+    const fileData = await new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        resolve({
+          name: file.name,
+          type: file.type,
+          data: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+
+    processedFiles.push(fileData);
+  }
+
+  setFileError("");
   setAttachments((prev) => [...prev, ...processedFiles]);
 };
+
 
   return (
     <div className="modal-overlay" data-testid="modal">
@@ -126,6 +141,12 @@ const handleFileChange = async (e) => {
                 accept="image/*,.pdf"
                 onChange={handleFileChange}
               />
+                  {fileError && (
+                  <p className="file-error" data-testid="file-error">
+                    {fileError}
+                  </p>
+                )}
+
           <div className="modal-actions">
             <button type="submit" data-testid="submit-btn">
               {existingTask ? "Update" : "Add"}

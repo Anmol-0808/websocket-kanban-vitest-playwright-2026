@@ -295,3 +295,8 @@ h2 {
   color: white !important;
   text-transform: uppercase;
 }
+.file-error {
+  color: var(--accent-red);
+  font-size: 12px;
+  margin-top: 6px;
+}

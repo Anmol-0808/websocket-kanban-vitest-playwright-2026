@@ -64,10 +64,17 @@ function TaskCard({ task, onEdit }) {
         {file.type.startsWith("image") ? (
           <img src={file.data} alt={file.name} />
         ) : (
-          <div className="pdf-badge">
+          <a
+              href={file.data}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pdf-badge"
+              onClick={(e) => e.stopPropagation()}
+            >
             📄 {file.name}
-          </div>
-        )}
+           </a>
+            )}
+
       </div>
     ))}
   </div>

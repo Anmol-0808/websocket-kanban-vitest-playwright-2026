@@ -1,25 +1,33 @@
 import React, { useEffect, useState } from "react";
 import "./KanbanBoard.css";
+import Select from "react-select";
 
 function TaskModal({ isOpen, onClose, onSubmit, existingTask }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState("medium");
   const [category, setCategory] = useState("feature");
+  const [attachments, setAttachments] = useState([]);
 
   useEffect(() => {
-    if (existingTask) {
-      setTitle(existingTask.title);
-      setDescription(existingTask.description || "");
-      setPriority(existingTask.priority);
-      setCategory(existingTask.category);
-    } else {
-      setTitle("");
-      setDescription("");
-      setPriority("medium");
-      setCategory("feature");
-    }
-  }, [existingTask]);
+  if (!isOpen) return;
+
+  if (existingTask) {
+    setTitle(existingTask.title);
+    setDescription(existingTask.description || "");
+    setPriority(existingTask.priority);
+    setCategory(existingTask.category);
+    setAttachments(existingTask.attachments || []);
+  } else {
+    
+    setTitle("");
+    setDescription("");
+    setPriority("medium");
+    setCategory("feature");
+    setAttachments([]);
+  }
+}, [isOpen, existingTask]);
+
 
   if (!isOpen) return null;
 
@@ -33,10 +41,32 @@ function TaskModal({ isOpen, onClose, onSubmit, existingTask }) {
       description,
       priority,
       category,
+      attachments,
     });
 
     onClose();
   };
+const handleFileChange = async (e) => {
+  const files = Array.from(e.target.files);
+
+  const processedFiles = await Promise.all(
+    files.map((file) => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve({
+            name: file.name,
+            type: file.type,
+            data: reader.result,
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    })
+  );
+
+  setAttachments((prev) => [...prev, ...processedFiles]);
+};
 
   return (
     <div className="modal-overlay" data-testid="modal">
@@ -59,26 +89,43 @@ function TaskModal({ isOpen, onClose, onSubmit, existingTask }) {
             data-testid="description-input"
           />
 
-          <select
-            value={priority}
-            onChange={(e) => setPriority(e.target.value)}
-            data-testid="priority-select"
-          >
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
-
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            data-testid="category-select"
-          >
-            <option value="bug">Bug</option>
-            <option value="feature">Feature</option>
-            <option value="enhancement">Enhancement</option>
-          </select>
-
+              <Select
+                value={{
+                  value: priority,
+                  label: priority.toUpperCase(),
+                }}
+                onChange={(option) => setPriority(option.value)}
+                options={[
+                  { value: "low", label: "LOW" },
+                  { value: "medium", label: "MEDIUM" },
+                  { value: "high", label: "HIGH" },
+                ]}
+                className="react-select"
+                classNamePrefix="react"
+              />
+                <Select
+              value={{
+                value: category,
+                label: category.toUpperCase(),
+              }}
+              onChange={(option) => setCategory(option.value)}
+              options={[
+                { value: "bug", label: "BUG" },
+                { value: "feature", label: "FEATURE" },
+                { value: "enhancement", label: "ENHANCEMENT" },
+              ]}
+              className="react-select"
+              classNamePrefix="react"
+            />
+              <label className="file-label">
+                Attach Files
+              </label>
+              <input
+                type="file"
+                multiple
+                accept="image/*,.pdf"
+                onChange={handleFileChange}
+              />
           <div className="modal-actions">
             <button type="submit" data-testid="submit-btn">
               {existingTask ? "Update" : "Add"}

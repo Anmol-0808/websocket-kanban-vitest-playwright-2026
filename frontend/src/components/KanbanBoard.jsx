@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import socket from "../socket";
 import "./KanbanBoard.css";
 import TaskModal from "./TaskModal";
+import ProgressChart from "./ProgressChart";
 
 import Column from "./Column";
 
@@ -60,13 +61,19 @@ function KanbanBoard() {
       ) : (
         <>
               <button
-                className="add-btn"
-                onClick={() => setIsModalOpen(true)}>
-                Add Task
-              </button>
+              className="add-btn"
+              onClick={() => {
+                setSelectedTask(null);
+                setIsModalOpen(true);
+              }}>
+              Add Task
+            </button>
 
 
-          <div className="board">
+
+          <div className="layout">
+          <ProgressChart tasks={tasks} />
+            <div className="board">
             <Column
               title="Todo"
               status="todo"
@@ -100,9 +107,11 @@ function KanbanBoard() {
               }}
             />
           </div>
+          </div>
         </>
       )}
         <TaskModal
+        key={selectedTask ? selectedTask.id : "create"}
         isOpen={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);

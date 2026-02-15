@@ -4,6 +4,8 @@ const { Server } = require("socket.io");
 const { v4: uuidv4 } = require("uuid");
 
 const app = express();
+app.use(express.json());
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -14,6 +16,11 @@ const io = new Server(server, {
 
 
 let tasks = [];
+app.post("/reset", (req, res) => {
+  tasks = [];
+  res.status(200).json({ message: "Tasks reset" });
+});
+
 
 io.on("connection", (socket) => {
   console.log("User connected:", socket.id);

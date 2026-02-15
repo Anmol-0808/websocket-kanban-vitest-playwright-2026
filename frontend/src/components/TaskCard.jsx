@@ -57,6 +57,21 @@ function TaskCard({ task, onEdit }) {
           {task.description}
         </p>
       )}
+      {task.attachments && task.attachments.length > 0 && (
+  <div className="attachment-preview">
+    {task.attachments.map((file, index) => (
+      <div key={index} className="attachment-item">
+        {file.type.startsWith("image") ? (
+          <img src={file.data} alt={file.name} />
+        ) : (
+          <div className="pdf-badge">
+            📄 {file.name}
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+)}
 
       <div className="badge-row">
   <div className="priority-badge">
